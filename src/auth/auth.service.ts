@@ -28,7 +28,7 @@ export class AuthService {
     };
   }
 
-  async signIn(user: CreateUserDto) {
+  async signIn(user: any) {
     return await this.usersService.createUser(user);
   }
 }

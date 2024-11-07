@@ -6,6 +6,11 @@ export const createUserSchema = z
     email: z.string().email(),
     password: z.string(),
     name: z.string().optional(),
+    nickname: z.string().optional(),
+    active: z.boolean().optional(),
+    roles: z.array(z.string()),
+    message: z.array(z.string()),
+    participant: z.array(z.string()),
   })
   .omit({ id: true });
 

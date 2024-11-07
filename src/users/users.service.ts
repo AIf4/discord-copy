@@ -24,11 +24,6 @@ export class UsersService {
   }): Promise<Omit<Users, 'password'>[]> {
     const { skip, take, cursor, where, orderBy } = params;
     return this.prisma.users.findMany({
-      select: {
-        id: true,
-        name: true,
-        email: true,
-      },
       skip,
       take,
       cursor,
