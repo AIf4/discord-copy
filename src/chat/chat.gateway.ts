@@ -8,9 +8,12 @@ import {
 } from '@nestjs/websockets';
 import { ChatService } from './chat.service';
 import { Server, Socket } from 'socket.io';
+import { Logger } from '@nestjs/common';
 
 @WebSocketGateway()
 export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
+  logger = new Logger(ChatGateway.name);
+
   @WebSocketServer()
   server: Server;
 
@@ -18,19 +21,26 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
   constructor(private readonly chatService: ChatService) {}
 
   handleConnection(client: Socket) {
-    console.log(`Cliente conectado: ${client.id}`);
+    this.logger.log(`Cliente conectado: ${client.id}`);
     // Guardar el cliente en el mapa al conectarse
     this.clients.set(client.id, client);
   }
 
   handleDisconnect(client: Socket) {
-    console.log(`Cliente desconectado: ${client.id}`);
+    this.logger.log(`Cliente desconectado: ${client.id}`);
     // Remover el cliente del mapa al desconectarse
     this.clients.delete(client.id);
   }
 
-  @SubscribeMessage('createGroup')
+  @SubscribeMessage('create-group')
   create(@MessageBody() createChatDto: any) {
+    this.logger.log('Creando grupo:', createChatDto);
     return this.chatService.create(createChatDto);
+  }
+
+  @SubscribeMessage('join-group')
+  joinGroup(@MessageBody() userJoinGroupDto: any) {
+    this.logger.log('uniendo al grupo:', userJoinGroupDto);
+    //return this.chatService.create(createChatDto);
   }
 }

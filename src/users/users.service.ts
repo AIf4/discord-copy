@@ -32,17 +32,21 @@ export class UsersService {
     });
   }
 
-  async createUser(data: Prisma.UsersCreateInput): Promise<Users> {
-    const findUser = await this.findOne({ email: data.email });
-    if (findUser) {
-      throw new BadRequestException('Email already exists');
+  async createUser(data: Prisma.UsersCreateInput) {
+    try {
+      const findUser = await this.findOne({ email: data.email });
+      if (findUser) {
+        throw new BadRequestException('Email already exists');
+      }
+      const { password, ...userData } = data;
+      const salt = await bcrypt.genSalt();
+      const hashedPassword = await bcrypt.hash(password, salt);
+      return this.prisma.users.create({
+        data: { ...userData, password: hashedPassword },
+      });
+    } catch (error) {
+      throw error;
     }
-    const { password, ...userData } = data;
-    const salt = await bcrypt.genSalt();
-    const hashedPassword = await bcrypt.hash(password, salt);
-    return this.prisma.users.create({
-      data: { ...userData, password: hashedPassword },
-    });
   }
 
   async updateUser(params: {

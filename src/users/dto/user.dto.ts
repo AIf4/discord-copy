@@ -8,9 +8,9 @@ export const createUserSchema = z
     name: z.string().optional(),
     nickname: z.string().optional(),
     active: z.boolean().optional(),
-    roles: z.array(z.string()),
-    message: z.array(z.string()),
-    participant: z.array(z.string()),
+    roles: z.array(z.string()).optional(),
+    message: z.array(z.string()).optional(),
+    participant: z.array(z.string()).optional(),
   })
   .omit({ id: true });
 

@@ -1,11 +1,14 @@
 import { Injectable } from '@nestjs/common';
-import { CreateChatDto } from './dto/create-chat.dto';
-import { UpdateChatDto } from './dto/update-chat.dto';
+import { PrismaService } from 'src/prisma.service';
 
 @Injectable()
 export class ChatService {
-  create(createChatDto: CreateChatDto) {
-    return 'This action adds a new chat';
+  constructor(private prisma: PrismaService) {}
+
+  create(createChatDto: any) {
+    return this.prisma.channel.create({
+      data: { ...createChatDto },
+    });
   }
 
   findAll() {
@@ -16,7 +19,7 @@ export class ChatService {
     return `This action returns a #${id} chat`;
   }
 
-  update(id: number, updateChatDto: UpdateChatDto) {
+  update(id: number, updateChatDto: any) {
     return `This action updates a #${id} chat`;
   }
 

@@ -10,7 +10,6 @@ import { AuthService } from './auth.service';
 import { LocalAuthGuard } from './guards/local-auth.guard';
 import { CreateUserDto, createUserSchema } from 'src/users/dto/user.dto';
 import { ZodValidationPipe } from 'src/pipes/zodValidation.pipe';
-import { Users } from '@prisma/client';
 
 @Controller('auth')
 export class AuthController {
@@ -24,7 +23,7 @@ export class AuthController {
 
   @Post('sign-in')
   @UsePipes(new ZodValidationPipe(createUserSchema))
-  async signupUser(@Body() userData: CreateUserDto): Promise<Users> {
+  async signupUser(@Body() userData: CreateUserDto): Promise<any> {
     return this.authService.signIn(userData);
   }
 }
