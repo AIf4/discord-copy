@@ -1,16 +1,28 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { Injectable } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
+import { BadRequestException, Injectable, Logger } from '@nestjs/common';
 import { UsersService } from '../users/users.service';
 import { JwtService } from '@nestjs/jwt';
-import { CreateUserDto } from 'src/users/dto/user.dto';
 
 @Injectable()
 export class AuthService {
+  private logger = new Logger(AuthService.name);
   constructor(
     private usersService: UsersService,
     private jwtService: JwtService,
   ) {}
+
+  async validateToken(token: string) {
+    try {
+      const req_token = this.jwtService.verify(token, {
+        secret: process.env.JWT_SECRET,
+      });
+      const { nick, sub } = req_token;
+      return { nickname: nick, id: sub };
+    } catch (error) {
+      throw new BadRequestException('Invalid token');
+    }
+  }
 
   async validateUser(email: string, pass: string): Promise<any> {
     const user = await this.usersService.findOne({ email });
@@ -21,11 +33,25 @@ export class AuthService {
     return null;
   }
 
-  async login(user: any) {
-    const payload = { username: user.username, sub: user.userId };
-    return {
-      access_token: this.jwtService.sign(payload),
-    };
+  async login(loginData: { email: string; password: string }) {
+    try {
+      const userData = await this.validateUser(
+        loginData.email,
+        loginData.password,
+      );
+      if (!userData) {
+        throw new Error('Invalid credentials');
+      }
+      const payload = { nick: userData.nickname, sub: userData.id };
+
+      return this.jwtService.sign(payload, {
+        secret: process.env.JWT_SECRET,
+        expiresIn: process.env.JWT_EXPIRATION_TIME || '60m',
+      });
+    } catch (error) {
+      this.logger.error(error);
+      throw new Error('Invalid credentials');
+    }
   }
 
   async signIn(user: any) {

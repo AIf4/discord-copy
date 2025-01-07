@@ -6,9 +6,11 @@ import {
   Patch,
   Param,
   Delete,
+  UseGuards,
 } from '@nestjs/common';
 import { ChannelService } from './channel.service';
 import { CreateChannelDto } from './dto/channel.dto';
+import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 
 @Controller('channel')
 export class ChannelController {
@@ -19,6 +21,7 @@ export class ChannelController {
     return this.channelService.create(createChannelDto);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Get()
   findAll() {
     return this.channelService.findAll();

@@ -7,11 +7,9 @@ import { Prisma, Users } from '@prisma/client';
 export class UsersService {
   constructor(private prisma: PrismaService) {}
 
-  async findOne(
-    userWhereUniqueInput: Prisma.UsersWhereUniqueInput,
-  ): Promise<Users | null> {
-    return await this.prisma.users.findUnique({
-      where: userWhereUniqueInput,
+  async findOne(userWhereInput: Prisma.UsersWhereInput): Promise<Users | null> {
+    return await this.prisma.users.findFirst({
+      where: userWhereInput,
     });
   }
 
@@ -34,9 +32,19 @@ export class UsersService {
 
   async createUser(data: Prisma.UsersCreateInput) {
     try {
-      const findUser = await this.findOne({ email: data.email });
-      if (findUser) {
-        throw new BadRequestException('Email already exists');
+      const findEmail = await this.findOne({ email: data.email });
+      if (findEmail) {
+        throw new BadRequestException({
+          message: 'Email already exists',
+          field: 'email',
+        });
+      }
+      const findNickname = await this.findOne({ nickname: data.nickname });
+      if (findNickname) {
+        throw new BadRequestException({
+          message: 'Nickname already exists',
+          field: 'nickname',
+        });
       }
       const { password, ...userData } = data;
       const salt = await bcrypt.genSalt();

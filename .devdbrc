@@ -2,5 +2,9 @@
   {
     "type": "sqlite",
     "path": "/home/alfa/Desktop/discord-copy/prisma/dev.db"
+  },
+  {
+    "type": "sqlite",
+    "path": "c:\\Users\\User\\discord_app\\discord-copy\\prisma\\dev.db"
   }
 ]
