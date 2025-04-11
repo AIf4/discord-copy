@@ -1,27 +1,27 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 import { PrismaService } from 'src/prisma.service';
-import { Prisma, Users } from '@prisma/client';
+import { Prisma, User } from '@prisma/client';
 
 @Injectable()
-export class UsersService {
+export class UserService {
   constructor(private prisma: PrismaService) {}
 
-  async findOne(userWhereInput: Prisma.UsersWhereInput): Promise<Users | null> {
-    return await this.prisma.users.findFirst({
+  async findOne(userWhereInput: Prisma.UserWhereInput): Promise<User | null> {
+    return await this.prisma.user.findFirst({
       where: userWhereInput,
     });
   }
 
-  async users(params: {
+  async User(params: {
     skip?: number;
     take?: number;
-    cursor?: Prisma.UsersWhereUniqueInput;
-    where?: Prisma.UsersWhereInput;
-    orderBy?: Prisma.UsersOrderByWithRelationInput;
-  }): Promise<Omit<Users, 'password'>[]> {
+    cursor?: Prisma.UserWhereUniqueInput;
+    where?: Prisma.UserWhereInput;
+    orderBy?: Prisma.UserOrderByWithRelationInput;
+  }): Promise<Omit<User, 'password'>[]> {
     const { skip, take, cursor, where, orderBy } = params;
-    return this.prisma.users.findMany({
+    return this.prisma.user.findMany({
       skip,
       take,
       cursor,
@@ -30,7 +30,7 @@ export class UsersService {
     });
   }
 
-  async createUser(data: Prisma.UsersCreateInput) {
+  async createUser(data: Prisma.UserCreateInput) {
     try {
       const findEmail = await this.findOne({ email: data.email });
       if (findEmail) {
@@ -39,17 +39,11 @@ export class UsersService {
           field: 'email',
         });
       }
-      const findNickname = await this.findOne({ nickname: data.nickname });
-      if (findNickname) {
-        throw new BadRequestException({
-          message: 'Nickname already exists',
-          field: 'nickname',
-        });
-      }
+
       const { password, ...userData } = data;
       const salt = await bcrypt.genSalt();
       const hashedPassword = await bcrypt.hash(password, salt);
-      return this.prisma.users.create({
+      return this.prisma.user.create({
         data: { ...userData, password: hashedPassword },
       });
     } catch (error) {
@@ -58,18 +52,18 @@ export class UsersService {
   }
 
   async updateUser(params: {
-    where: Prisma.UsersWhereUniqueInput;
-    data: Prisma.UsersUpdateInput;
-  }): Promise<Users> {
+    where: Prisma.UserWhereUniqueInput;
+    data: Prisma.UserUpdateInput;
+  }): Promise<User> {
     const { where, data } = params;
-    return this.prisma.users.update({
+    return this.prisma.user.update({
       data,
       where,
     });
   }
 
-  async deleteUser(where: Prisma.UsersWhereUniqueInput): Promise<Users> {
-    return this.prisma.users.delete({
+  async deleteUser(where: Prisma.UserWhereUniqueInput): Promise<User> {
+    return this.prisma.user.delete({
       where,
     });
   }

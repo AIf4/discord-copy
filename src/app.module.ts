@@ -6,9 +6,20 @@ import { UsersModule } from './users/users.module';
 import { PrismaService } from './prisma.service';
 import { ChatModule } from './chat/chat.module';
 import { ChannelModule } from './channel/channel.module';
+import { CaslModule } from './casl/casl.module';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
-  imports: [AuthModule, UsersModule, ChatModule, ChannelModule],
+  imports: [
+    ConfigModule.forRoot({
+      isGlobal: true,
+    }),
+    AuthModule,
+    UsersModule,
+    ChatModule,
+    ChannelModule,
+    CaslModule,
+  ],
   controllers: [AppController],
   providers: [AppService, PrismaService],
 })
