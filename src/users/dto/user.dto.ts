@@ -1,17 +1,36 @@
 import { z } from 'zod';
+// Asegúrate de importar el enum Role desde el cliente Prisma generado
+import { Role } from '@prisma/client';
 
-export const createUserSchema = z
-  .object({
-    id: z.number(),
-    email: z.string().email(),
-    password: z.string(),
-    name: z.string().optional(),
-    nickname: z.string().optional(),
-    active: z.boolean().optional(),
-    roles: z.array(z.string()).optional(),
-    message: z.array(z.string()).optional(),
-    participant: z.array(z.string()).optional(),
-  })
-  .omit({ id: true });
+export const createUserSchema = z.object({
+  // email: Requerido, debe ser un string y formato de email válido.
+  email: z
+    .string({
+      required_error: 'Email is required', // Mensaje si no se provee
+      invalid_type_error: 'Email must be a string', // Mensaje si no es string
+    })
+    .email({
+      message: 'Invalid email address', // Mensaje si el formato no es válido
+    }),
 
+  // password: Requerido, debe ser un string.
+  // Puedes añadir más validaciones, como longitud mínima.
+  password: z
+    .string({
+      required_error: 'Password is required',
+      invalid_type_error: 'Password must be a string',
+    })
+    .min(8, { message: 'Password must be at least 8 characters long' }), // Ejemplo: mínimo 8 caracteres
+
+  // role: Opcional. Si no se provee, Prisma usará el valor por defecto (DEFAULT).
+  // Validamos que el valor (si se provee) sea uno de los definidos en el enum Role.
+  role: z
+    .nativeEnum(Role, {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      errorMap: (issue, ctx) => ({ message: 'Invalid role provided' }), // Mensaje de error personalizado
+    })
+    .optional(),
+});
+
+// El tipo CreateUserDto se infiere del esquema Zod.
 export type CreateUserDto = z.infer<typeof createUserSchema>;
