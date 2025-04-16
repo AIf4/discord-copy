@@ -4,6 +4,7 @@ import { BadRequestException, Injectable, Logger } from '@nestjs/common';
 
 import { JwtService } from '@nestjs/jwt';
 import { UserService } from 'src/users/users.service';
+import { User } from '@prisma/client';
 
 @Injectable()
 export class AuthService {
@@ -34,7 +35,15 @@ export class AuthService {
     return null;
   }
 
-  async login(loginData: { email: string; password: string }) {
+  async generateJwtToken(user: Pick<User, 'email' | 'id' | 'role'>) {
+    const payload = { email: user.email, sub: user.id, role: user.role };
+    return this.jwtService.sign(payload, {
+      secret: process.env.JWT_SECRET,
+      expiresIn: process.env.JWT_EXPIRATION_TIME || '60m',
+    });
+  }
+
+  /* async login(loginData: { email: string; password: string }) {
     try {
       const userData = await this.validateUser(
         loginData.email,
@@ -53,7 +62,7 @@ export class AuthService {
       this.logger.error(error);
       throw new Error('Invalid credentials');
     }
-  }
+  } */
 
   async signIn(user: any) {
     return await this.usersService.createUser(user);

@@ -1,8 +1,17 @@
-import { Controller, Post, Request, UsePipes, Body, Res } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Request,
+  UsePipes,
+  Body,
+  Res,
+  UseGuards,
+} from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { CreateUserDto, createUserSchema } from 'src/users/dto/user.dto';
 import { ZodValidationPipe } from 'src/pipes/zodValidation.pipe';
 import { Response } from 'express';
+import { LocalAuthGuard } from './guards/local-auth.guard';
 
 @Controller('auth')
 export class AuthController {
@@ -12,24 +21,19 @@ export class AuthController {
   async verifyToken(@Request() req: any) {
     return this.authService.validateToken(req.body.token);
   }
-
   @Post('login')
+  @UseGuards(LocalAuthGuard)
   async login(@Request() req: any, @Res() res: Response) {
-    try {
-      const access_token = await this.authService.login(req.body);
-      res.cookie('access_token', access_token, {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === 'production', // Cambia a true si usas HTTPS
-        sameSite: 'strict',
-      });
-      return res.status(201).json({
-        message: 'User created successfully',
-      });
-    } catch (error) {
-      return res.status(400).json({
-        message: error.message,
-      });
-    }
+    const access_token = await this.authService.generateJwtToken(req.user);
+    // Guardar el token en una cookie
+    res.cookie('token', access_token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production', // Cambia a true si usas HTTPS
+      sameSite: 'strict',
+    });
+    return res.status(200).json({
+      message: 'Login successfully',
+    });
   }
 
   @Post('sign-in')

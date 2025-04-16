@@ -3,6 +3,7 @@ import * as bcrypt from 'bcrypt';
 import { PrismaService } from 'src/prisma.service';
 import { Prisma, User } from '@prisma/client';
 
+type UserSummary = Pick<User, 'id' | 'email' | 'role' | 'createdAt'>;
 @Injectable()
 export class UserService {
   constructor(private prisma: PrismaService) {}
@@ -28,8 +29,14 @@ export class UserService {
     }
   }
 
-  async findAll(): Promise<User[]> {
+  async findAll(): Promise<UserSummary[]> {
     return await this.prisma.user.findMany({
+      select: {
+        id: true,
+        email: true,
+        role: true,
+        createdAt: true,
+      },
       orderBy: { createdAt: 'desc' },
     });
   }
