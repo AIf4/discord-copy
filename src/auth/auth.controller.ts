@@ -17,10 +17,11 @@ import { LocalAuthGuard } from './guards/local-auth.guard';
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
-  @Post('verify-token')
+  /* @Post('verify-token')
   async verifyToken(@Request() req: any) {
     return this.authService.validateToken(req.body.token);
-  }
+  } */
+
   @Post('login')
   @UseGuards(LocalAuthGuard)
   async login(@Request() req: any, @Res() res: Response) {
@@ -44,7 +45,7 @@ export class AuthController {
 
   @Post('logout')
   async logout(@Res() res: Response) {
-    res.clearCookie('access_token');
+    res.clearCookie('token');
     return res.status(200).json({
       message: 'Logout successfully',
     });

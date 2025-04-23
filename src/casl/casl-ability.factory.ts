@@ -48,12 +48,12 @@ export class CaslAbilityFactory {
 
       case Role.DEFAULT:
         // El usuario DEFAULT tiene permisos más restringidos (acciones propias)
-
+        cannot(Action.READ, 'User', 'all');
         // Usuario: Puede leer y actualizar su propio perfil
         can([Action.READ, Action.UPDATE], 'User', { id: user.id });
 
         // Canal: Puede crear y leer canales
-        can([Action.CREATE, Action.READ], 'Channel');
+        can(Action.READ, 'Channel');
         // No puede eliminar canales (podrías añadir reglas para actualizar o eliminar canales que creó, si es necesario)
         cannot(Action.DELETE, 'Channel');
 

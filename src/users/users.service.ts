@@ -22,6 +22,12 @@ export class UserService {
       const salt = await bcrypt.genSalt();
       const hashedPassword = await bcrypt.hash(password, salt);
       return this.prisma.user.create({
+        select: {
+          id: true,
+          email: true,
+          role: true,
+          createdAt: true,
+        },
         data: { ...userData, password: hashedPassword },
       });
     } catch (error) {
@@ -41,8 +47,12 @@ export class UserService {
     });
   }
 
-  async findOne(UserWhereInput: Prisma.UserWhereInput): Promise<User | null> {
+  async findOne(
+    UserWhereInput: Prisma.UserWhereInput,
+    UserSelectInput?: Prisma.UserSelect,
+  ): Promise<User | null> {
     return await this.prisma.user.findFirst({
+      select: UserSelectInput,
       where: UserWhereInput,
     });
   }
@@ -67,16 +77,42 @@ export class UserService {
   async updateUser(params: {
     where: Prisma.UserWhereUniqueInput;
     data: Prisma.UserUpdateInput;
-  }): Promise<User> {
+  }): Promise<Pick<User, 'id' | 'email' | 'role' | 'createdAt'>> {
     const { where, data } = params;
-    return this.prisma.user.update({
-      data,
+    const userFind = await this.findOne(where);
+    if (!userFind) {
+      throw new BadRequestException({
+        message: 'User not found',
+      });
+    }
+    const { password: oldPassword }: any = data;
+    const salt = await bcrypt.genSalt();
+    const hashedPassword = await bcrypt.hash(oldPassword, salt);
+
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { password, ...userUpdated } = await this.prisma.user.update({
+      data: { password: hashedPassword },
       where,
     });
+    return userUpdated;
   }
 
-  async deleteUser(where: Prisma.UserWhereUniqueInput): Promise<User> {
+  async deleteUser(
+    where: Prisma.UserWhereUniqueInput,
+  ): Promise<Pick<User, 'id' | 'email' | 'role' | 'createdAt'>> {
+    const user = await this.findOne(where);
+    if (!user) {
+      throw new BadRequestException({
+        message: 'User not found',
+      });
+    }
     return this.prisma.user.delete({
+      select: {
+        id: true,
+        email: true,
+        role: true,
+        createdAt: true,
+      },
       where,
     });
   }

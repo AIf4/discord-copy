@@ -34,3 +34,36 @@ export const createUserSchema = z.object({
 
 // El tipo CreateUserDto se infiere del esquema Zod.
 export type CreateUserDto = z.infer<typeof createUserSchema>;
+
+export const updateUserSchema = z.object({
+  // email: Opcional, pero si se provee, debe ser un string y formato de email válido.
+  email: z
+    .string({
+      invalid_type_error: 'Email must be a string',
+    })
+    .email({
+      message: 'Invalid email address',
+    })
+    .optional(),
+
+  // password: Opcional, pero si se provee, debe ser un string.
+  password: z
+    .string({
+      invalid_type_error: 'Password must be a string',
+    })
+    .min(8, { message: 'Password must be at least 8 characters long' })
+    .optional(),
+
+  // role: Opcional. Si se provee, debe ser uno de los definidos en el enum Role.
+  role: z
+    .nativeEnum(Role, {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      errorMap: (issue, ctx) => ({ message: 'Invalid role provided' }),
+    })
+    .optional(),
+});
+
+export type UpdateUserDto = z.infer<typeof createUserSchema> & {
+  email?: never; // Evitamos que se pueda actualizar el email
+  role?: Role;
+};

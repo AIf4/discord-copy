@@ -43,27 +43,6 @@ export class AuthService {
     });
   }
 
-  /* async login(loginData: { email: string; password: string }) {
-    try {
-      const userData = await this.validateUser(
-        loginData.email,
-        loginData.password,
-      );
-      if (!userData) {
-        throw new Error('Invalid credentials');
-      }
-      const payload = { nick: userData.nickname, sub: userData.id };
-
-      return this.jwtService.sign(payload, {
-        secret: process.env.JWT_SECRET,
-        expiresIn: process.env.JWT_EXPIRATION_TIME || '60m',
-      });
-    } catch (error) {
-      this.logger.error(error);
-      throw new Error('Invalid credentials');
-    }
-  } */
-
   async signIn(user: any) {
     return await this.usersService.createUser(user);
   }
