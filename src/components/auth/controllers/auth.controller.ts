@@ -7,11 +7,13 @@ import {
   Res,
   UseGuards,
 } from '@nestjs/common';
-import { AuthService } from './auth.service';
-import { CreateUserDto, createUserSchema } from 'src/users/dto/user.dto';
-import { ZodValidationPipe } from 'src/pipes/zodValidation.pipe';
+import {
+  CreateUserDto,
+  createUserSchema,
+} from '@components/users/dto/user.dto';
+import { ZodValidationPipe } from '@pipes/zodValidation.pipe';
 import { Response } from 'express';
-import { LocalAuthGuard } from './guards/local-auth.guard';
+import { LocalAuthGuard, AuthService } from '@components/auth';
 
 @Controller('auth')
 export class AuthController {

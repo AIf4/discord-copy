@@ -1,11 +1,9 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
-import { AuthModule } from './auth/auth.module';
+import { AuthModule } from '@components/auth';
+import { ChannelModule } from '@components/channel';
 import { UsersModule } from './users/users.module';
 import { PrismaService } from './prisma.service';
 import { ChatModule } from './chat/chat.module';
-import { ChannelModule } from './channel/channel.module';
 import { CaslModule } from './casl/casl.module';
 import { ConfigModule } from '@nestjs/config';
 
@@ -20,7 +18,7 @@ import { ConfigModule } from '@nestjs/config';
     ChannelModule,
     CaslModule,
   ],
-  controllers: [AppController],
-  providers: [AppService, PrismaService],
+  controllers: [],
+  providers: [PrismaService],
 })
 export class AppModule {}

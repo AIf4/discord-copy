@@ -9,14 +9,19 @@ import {
   UseGuards,
   UsePipes,
   UseInterceptors,
-  BadRequestException,
 } from '@nestjs/common';
-import { ChannelService } from './channel.service';
-import { CreateChannelDto, CreateChannelSchema } from './dto/channel.dto';
-import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
-import { ZodValidationPipe } from 'src/pipes/zodValidation.pipe';
-import { PermissionsInterceptor } from 'src/casl/casl-validate.interceptor';
-import { PoliciesGuard } from 'src/casl/policies.guard';
+
+import {
+  CreateChannelDto,
+  CreateChannelSchema,
+  UpdateChannelDto,
+  UpdateChannelSchema,
+} from '../dto/channel.dto';
+import { JwtAuthGuard } from '@components/auth';
+import { ZodValidationPipe } from '@pipes/zodValidation.pipe';
+import { PermissionsInterceptor } from '@casl/casl-validate.interceptor';
+import { PoliciesGuard } from '@casl/policies.guard';
+import { ChannelService } from '@components/channel';
 
 @Controller('channel')
 export class ChannelController {
@@ -38,16 +43,23 @@ export class ChannelController {
   }
 
   @Get(':id')
+  @UseGuards(JwtAuthGuard, PoliciesGuard)
+  @UseInterceptors(PermissionsInterceptor)
   findOne(@Param('id') id: string) {
     return this.channelService.findOne(+id);
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateChannelDto: any) {
+  @UseGuards(JwtAuthGuard, PoliciesGuard)
+  @UseInterceptors(PermissionsInterceptor)
+  @UsePipes(new ZodValidationPipe(UpdateChannelSchema))
+  update(@Param('id') id: string, @Body() updateChannelDto: UpdateChannelDto) {
     return this.channelService.update(+id, updateChannelDto);
   }
 
   @Delete(':id')
+  @UseGuards(JwtAuthGuard, PoliciesGuard)
+  @UseInterceptors(PermissionsInterceptor)
   remove(@Param('id') id: string) {
     return this.channelService.remove(+id);
   }

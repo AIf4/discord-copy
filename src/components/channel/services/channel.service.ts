@@ -1,5 +1,5 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
-import { CreateChannelDto } from './dto/channel.dto';
+import { CreateChannelDto } from '../dto/channel.dto';
 import { PrismaService } from 'src/prisma.service';
 
 @Injectable()
@@ -27,19 +27,26 @@ export class ChannelService {
     }
   }
 
-  findAll() {
-    return this.prismaService.channel.findMany();
+  async findAll() {
+    return await this.prismaService.channel.findMany();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} channel`;
+  async findOne(id: number) {
+    return await this.prismaService.channel.findUnique({
+      where: { id },
+    });
   }
 
-  update(id: number, updateChannelDto: any) {
-    return `This action updates a #${id} channel`;
+  async update(id: number, updateChannelDto: any) {
+    return await this.prismaService.channel.update({
+      where: { id },
+      data: updateChannelDto,
+    });
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} channel`;
+  async remove(id: number) {
+    return await this.prismaService.channel.delete({
+      where: { id },
+    });
   }
 }
