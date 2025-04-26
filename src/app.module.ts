@@ -1,10 +1,10 @@
 import { Module } from '@nestjs/common';
 import { AuthModule } from '@components/auth';
 import { ChannelModule } from '@components/channel';
-import { UsersModule } from './users/users.module';
+import { UsersModule } from '@components/users';
 import { PrismaService } from './prisma.service';
-import { ChatModule } from './chat/chat.module';
-import { CaslModule } from './casl/casl.module';
+import { ChatModule } from '@components/chat';
+import { CaslModule } from '@casl/casl.module';
 import { ConfigModule } from '@nestjs/config';
 
 @Module({

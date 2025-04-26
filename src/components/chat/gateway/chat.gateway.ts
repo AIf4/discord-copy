@@ -6,7 +6,7 @@ import {
   OnGatewayDisconnect,
   WebSocketServer,
 } from '@nestjs/websockets';
-import { ChatService } from './chat.service';
+import { ChatService } from '@components/chat';
 import { Server, Socket } from 'socket.io';
 import { Logger } from '@nestjs/common';
 

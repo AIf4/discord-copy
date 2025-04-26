@@ -1,6 +1,5 @@
 import { Module } from '@nestjs/common';
-import { ChatService } from './chat.service';
-import { ChatGateway } from './chat.gateway';
+import { ChatGateway, ChatService } from '@components/chat';
 import { PrismaService } from 'src/prisma.service';
 
 @Module({
