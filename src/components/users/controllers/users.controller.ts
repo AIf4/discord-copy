@@ -12,11 +12,13 @@ import {
   UseInterceptors,
   UsePipes,
 } from '@nestjs/common';
-import { JwtAuthGuard } from '@components/auth';
-import { UserService, createUserSchema } from '@components/users';
+
 import { Prisma } from '@prisma/client';
-import { ZodValidationPipe } from '@pipes/zodValidation.pipe';
-import { PoliciesGuard, PermissionsInterceptor } from '@casl/index';
+import { UserService } from '../services/users.service';
+import { ZodValidationPipe } from 'src/pipes/zodValidation.pipe';
+import { createUserSchema } from '../dto/user.dto';
+import { PermissionsInterceptor, PoliciesGuard } from 'src/casl';
+import { JwtAuthGuard } from 'src/components/auth/guards/jwt-auth.guard';
 
 @Controller('users')
 export class UsersController {

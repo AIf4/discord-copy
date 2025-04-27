@@ -1,6 +1,7 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
-import { CreateChannelDto } from '@components/channel';
+
 import { PrismaService } from 'src/prisma.service';
+import { CreateChannelDto } from '../dto/channel.dto';
 
 @Injectable()
 export class ChannelService {

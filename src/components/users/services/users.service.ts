@@ -1,6 +1,6 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
-import { PrismaService } from 'src/prisma.service';
+import { PrismaService } from '../../../prisma.service';
 import { Prisma, User } from '@prisma/client';
 
 type UserSummary = Pick<User, 'id' | 'email' | 'role' | 'createdAt'>;
