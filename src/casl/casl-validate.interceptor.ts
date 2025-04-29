@@ -10,7 +10,7 @@ import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { AppAbility } from './casl-ability.factory';
 import { Request } from 'express';
-import { Action } from 'src/utils/global.enum';
+import { Action } from '@utils/global.enum';
 import { subject } from '@casl/ability';
 
 @Injectable()

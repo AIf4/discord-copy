@@ -6,10 +6,8 @@ import { ZodValidationPipe } from '../../../pipes/zodValidation.pipe';
 
 import { Response } from 'express';
 import { HttpStatus } from '@nestjs/common';
-import {
-  CreateUserDto,
-  createUserSchema,
-} from '../../../components/users/dto/user.dto';
+import { CreateUserDto } from '@components/users/dto/user.dto';
+import { createUserSchema } from '@components/users/dto/user.dto';
 
 // Mock AuthService
 const mockAuthService = {

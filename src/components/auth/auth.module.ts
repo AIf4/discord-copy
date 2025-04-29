@@ -4,9 +4,9 @@ import { PassportModule } from '@nestjs/passport';
 import { AuthService } from './services/auth.service';
 import { AuthController } from './controllers/auth.controller';
 import { jwtConstants } from 'src/shared/constants';
-import { UsersModule } from '../users';
 import { LocalStrategy } from './strategy/local.strategy';
 import { JwtStrategy } from './strategy/jwt.strategy';
+import { UsersModule } from '@components/users/users.module';
 
 @Module({
   imports: [

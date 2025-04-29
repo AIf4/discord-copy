@@ -19,9 +19,10 @@ import {
 } from '../dto/channel.dto';
 import { ChannelService } from '../services/channel.service';
 
-import { PermissionsInterceptor, PoliciesGuard } from 'src/casl';
-import { ZodValidationPipe } from 'src/pipes/zodValidation.pipe';
-import { JwtAuthGuard } from 'src/components/auth/guards/jwt-auth.guard';
+import { ZodValidationPipe } from '@pipes/zodValidation.pipe';
+import { JwtAuthGuard } from '@components/auth/guards/jwt-auth.guard';
+import { PoliciesGuard } from '../../../casl/policies.guard';
+import { PermissionsInterceptor } from '../../../casl/casl-validate.interceptor';
 
 @Controller('channel')
 export class ChannelController {

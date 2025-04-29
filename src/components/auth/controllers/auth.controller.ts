@@ -15,7 +15,7 @@ import { ZodValidationPipe } from '../../../pipes/zodValidation.pipe';
 import {
   CreateUserDto,
   createUserSchema,
-} from '../../../components/users/dto/user.dto';
+} from '@components/users/dto/user.dto';
 
 @Controller('auth')
 export class AuthController {

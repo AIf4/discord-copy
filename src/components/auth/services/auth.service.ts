@@ -5,7 +5,7 @@ import { BadRequestException, Injectable, Logger } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 
 import { User } from '@prisma/client';
-import { UserService } from '../../../components/users/services/users.service';
+import { UserService } from '@components/users/services/users.service';
 
 @Injectable()
 export class AuthService {
@@ -20,8 +20,8 @@ export class AuthService {
       const req_token = this.jwtService.verify(token, {
         secret: process.env.JWT_SECRET,
       });
-      const { nick, sub } = req_token;
-      return { nickname: nick, id: sub };
+      const { email, sub } = req_token;
+      return { email: email, id: sub };
     } catch (error) {
       throw new BadRequestException('Invalid token');
     }

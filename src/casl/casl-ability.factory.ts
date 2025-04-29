@@ -2,7 +2,7 @@ import { AbilityBuilder, PureAbility } from '@casl/ability';
 import { createPrismaAbility, PrismaQuery, Subjects } from '@casl/prisma';
 import { Injectable } from '@nestjs/common';
 import { Channel, Message, Participant, User } from '@prisma/client';
-import { Action, Role } from 'src/utils/global.enum';
+import { Action, Role } from '@utils/global.enum';
 
 // Definimos todos los sujetos como strings o 'all'
 type AppSubjects =

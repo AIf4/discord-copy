@@ -1,11 +1,12 @@
 import { Module } from '@nestjs/common';
 import { PrismaService } from './prisma.service';
 import { ConfigModule } from '@nestjs/config';
-import { AuthModule } from './components/auth';
-import { UsersModule } from './components/users';
-import { ChatModule } from './components/chat';
-import { ChannelModule } from './components/channel';
-import { CaslModule } from './casl';
+
+import { AuthModule } from '@components/auth/auth.module';
+import { UsersModule } from '@components/users/users.module';
+import { ChatModule } from '@components/chat/chat.module';
+import { ChannelModule } from '@components/channel/channel.module';
+import { CaslModule } from '@ccasl/casl.module';
 
 @Module({
   imports: [
